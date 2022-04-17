@@ -22,8 +22,11 @@ router.get("/:contactId", async (req, res, next) => {
 });
 
 router.post("/", async (req, res, next) => {
-  // console.log(req.body);
-  res.json({ message: "template message" });
+  // validateBody(schemaCreateContact)
+  console.log("body:", req.body);
+
+  const newContact = await contactsModel.addContact(req.body);
+  res.status(201).json({ status: "success", code: 201, data: newContact });
 });
 
 router.delete("/:contactId", async (req, res, next) => {
