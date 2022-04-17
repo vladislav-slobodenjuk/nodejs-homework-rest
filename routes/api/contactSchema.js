@@ -1,6 +1,6 @@
 const Joi = require("joi");
 
-const schemaCreateContact = Joi.object({
+const contactSchema = Joi.object({
   name: Joi.string().min(2).max(35).required(),
   email: Joi.string()
     .email({
@@ -13,4 +13,4 @@ const schemaCreateContact = Joi.object({
     .required(),
 });
 
-module.exports = schemaCreateContact;
+module.exports = contactSchema;
