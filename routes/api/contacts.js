@@ -1,24 +1,38 @@
 const express = require("express");
+const Errors = require("http-errors");
 const contactsModel = require("../../models/contacts");
 
 const router = express.Router();
 
 router.get("/", async (req, res, next) => {
-  const data = await contactsModel.listContacts();
-  res.json({ status: "success", code: 200, data });
+  try {
+    const data = await contactsModel.listContacts();
+    res.json({ status: "success", code: 200, data });
+  } catch (error) {
+    next(error);
+  }
 });
 
 router.get("/:contactId", async (req, res, next) => {
   const contactId = req.params.contactId;
-  const data = await contactsModel.getContactById(contactId);
 
-  if (!data) {
-    return res
-      .status(404)
-      .json({ status: "error", code: 404, message: "Not found" });
+  try {
+    const data = await contactsModel.getContactById(contactId);
+    if (!data) {
+      throw new Errors.NotFound(`Contact ${contactId} not found`);
+
+      // const error = new Error("Not found");
+      // error.status = 404;
+      // throw error;
+
+      // return res
+      //   .status(404)
+      //   .json({ status: "error", code: 404, message: "Not found" });
+    }
+    res.json({ status: "success", code: 200, data });
+  } catch (error) {
+    next(error);
   }
-
-  res.json({ status: "success", code: 200, data });
 });
 
 router.post("/", async (req, res, next) => {
