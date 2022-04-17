@@ -7,11 +7,6 @@ const validateBody = (schema) => async (req, res, next) => {
   } catch (error) {
     const customError = Errors.BadRequest(error.message);
     next(customError);
-
-    // console.log("err.details:", error.details);
-    // return res
-    //   .status(400)
-    //   .json({ status: "error", code: 400, message: err.message });
   }
 };
 

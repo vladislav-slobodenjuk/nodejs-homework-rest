@@ -2,7 +2,7 @@ const express = require("express");
 const Errors = require("http-errors");
 const contactsModel = require("../../models/contacts");
 const validateBody = require("../../middlewares/validation");
-const { schemaCreateContact } = require("./contactsValidationSchems");
+const schemaCreateContact = require("./contactsValidationSchems");
 
 const router = express.Router();
 
@@ -42,19 +42,40 @@ router.post("/", validateBody(schemaCreateContact), async (req, res, next) => {
 
 router.delete("/:contactId", async (req, res, next) => {
   const contactId = req.params.contactId;
-  const data = await contactsModel.removeContact(contactId);
 
-  if (!data) {
-    return res
-      .status(404)
-      .json({ status: "error", code: 404, message: "Not found" });
+  try {
+    const data = await contactsModel.removeContact(contactId);
+    if (!data) {
+      throw new Errors.NotFound(`Contact ${contactId} not found`);
+    }
+
+    res.json({
+      status: "success",
+      code: 200,
+      message: "contact deleted",
+      data,
+    });
+  } catch (error) {
+    next(error);
   }
-
-  res.json({ status: "success", code: 200, message: "contact deleted", data });
 });
 
-router.put("/:contactId", async (req, res, next) => {
-  res.json({ message: "template message" });
-});
+router.put(
+  "/:contactId",
+  validateBody(schemaCreateContact),
+  async (req, res, next) => {
+    const contactId = req.params.contactId;
+
+    try {
+      const data = await contactsModel.updateContact(contactId, req.body);
+      if (!data) {
+        throw new Errors.NotFound(`Contact ${contactId} not found`);
+      }
+      res.status(200).json({ status: "success", code: 200, data });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 module.exports = router;

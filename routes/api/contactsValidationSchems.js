@@ -13,4 +13,4 @@ const schemaCreateContact = Joi.object({
     .required(),
 });
 
-module.exports = { schemaCreateContact };
+module.exports = schemaCreateContact;
