@@ -1,6 +1,6 @@
 const Errors = require("http-errors");
 
-const contactsModel = require("../../models/contacts");
+const contactsModel = require("../../repository/contacts");
 
 const listContacts = async (req, res, next) => {
   try {
