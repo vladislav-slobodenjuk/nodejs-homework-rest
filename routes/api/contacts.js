@@ -1,5 +1,6 @@
 const express = require("express");
 const Errors = require("http-errors");
+
 const contactsModel = require("../../models/contacts");
 const validateBody = require("../../middlewares/validation");
 const contactSchema = require("./contactSchema");
