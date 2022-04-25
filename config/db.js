@@ -5,21 +5,16 @@ const DB_HOST = process.env.DB_HOST;
 
 const db = mongoose.connect(DB_HOST);
 
-// const db = mongoose.connect(uri, {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true,
-// });
-
 mongoose.connection.on("connected", () => {
   console.log("Database connection successful");
 });
 
 mongoose.connection.on("error", (err) => {
-  console.log(`Mongoose connection error: ${err}`);
+  console.log(`Database connection error: ${err}`);
 });
 
 mongoose.connection.on("disconnected", () => {
-  console.log("Disconnected from DB");
+  console.log("Disconnected from Database");
 });
 
 // process.on("SIGINT", async () => {

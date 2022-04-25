@@ -1,55 +1,30 @@
-const fs = require("fs/promises");
-const path = require("path");
-const { randomUUID } = require("crypto");
-
-const contactsPath = path.join(__dirname, "contacts.json");
-console.log("contactsPath:", contactsPath);
-
-const readContacts = async () => {
-  const contacts = await fs.readFile(contactsPath, "utf8");
-  const parsedContacts = JSON.parse(contacts);
-  return parsedContacts;
-};
+const Contact = require("../models/contact");
 
 const listContacts = async () => {
-  return await readContacts();
+  return await Contact.find();
 };
 
 const getContactById = async (contactId) => {
-  const contacts = await readContacts();
-  const contact = contacts.find((contact) => contact.id === contactId);
+  const contact = await Contact.findById(contactId);
   return contact || null;
 };
 
 const addContact = async (body) => {
-  const contacts = await readContacts();
-  const newContact = { id: randomUUID(), ...body };
-
-  contacts.push(newContact);
-  await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
-  return newContact;
+  return await Contact.create(body);
 };
 
 const removeContact = async (contactId) => {
-  const contacts = await readContacts();
-  const contactIdx = contacts.findIndex((contact) => contact.id === contactId);
-
-  if (contactIdx < 0) return null;
-
-  const [contact] = contacts.splice(contactIdx, 1); // деструк-ция поскольку splice возвращает массив
-  await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
-  return contact;
+  return (await Contact.findByIdAndRemove(contactId)) || null;
 };
 
 const updateContact = async (contactId, body) => {
-  const contacts = await readContacts();
-  const contactIdx = contacts.findIndex((contact) => contact.id === contactId);
+  const contact = await Contact.findByIdAndUpdate(contactId, { ...body });
+  return contact;
+};
 
-  if (contactIdx < 0) return null;
-
-  contacts[contactIdx] = { ...contacts[contactIdx], ...body };
-  await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
-  return contacts[contactIdx];
+const updateStatusContact = async (contactId, body) => {
+  const result = await Contact.findByIdAndUpdate(contactId, { ...body });
+  return result || null;
 };
 
 module.exports = {
@@ -58,4 +33,5 @@ module.exports = {
   removeContact,
   addContact,
   updateContact,
+  updateStatusContact,
 };

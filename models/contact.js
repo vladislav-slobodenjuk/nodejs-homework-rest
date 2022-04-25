@@ -5,7 +5,6 @@ const contactSchema = Schema({
   email: { type: String },
   phone: { type: String },
   favorite: { type: Boolean, default: false },
-  date: { type: Date, default: () => Date.now() },
 });
 
 const Contact = model("contact", contactSchema);
