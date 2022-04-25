@@ -1,6 +1,5 @@
 const Errors = require("http-errors");
 
-// const contactsModel = require("../../repository/contacts");
 const contactRepository = require("../../repository/contacts");
 
 const listContacts = async (req, res, next) => {
@@ -17,7 +16,6 @@ const getContactById = async (req, res, next) => {
 
   try {
     const data = await contactRepository.getContactById(contactId);
-    // console.log("getContactById at controller", data);
     if (!data) {
       throw new Errors.NotFound(`Contact ${contactId} not found`);
     }
