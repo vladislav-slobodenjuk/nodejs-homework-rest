@@ -5,8 +5,7 @@ const listContacts = async () => {
 };
 
 const getContactById = async (contactId) => {
-  const contact = await Contact.findById(contactId);
-  return contact || null;
+  return await Contact.findById(contactId);
 };
 
 const addContact = async (body) => {
@@ -14,17 +13,11 @@ const addContact = async (body) => {
 };
 
 const removeContact = async (contactId) => {
-  return (await Contact.findByIdAndRemove(contactId)) || null;
+  return await Contact.findByIdAndRemove(contactId);
 };
 
 const updateContact = async (contactId, body) => {
-  const contact = await Contact.findByIdAndUpdate(contactId, { ...body });
-  return contact;
-};
-
-const updateStatusContact = async (contactId, body) => {
-  const result = await Contact.findByIdAndUpdate(contactId, { ...body });
-  return result || null;
+  return await Contact.findByIdAndUpdate(contactId, { ...body }, { new: true });
 };
 
 module.exports = {
@@ -33,5 +26,4 @@ module.exports = {
   removeContact,
   addContact,
   updateContact,
-  updateStatusContact,
 };

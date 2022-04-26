@@ -78,10 +78,7 @@ const updateStatusContact = async (req, res, next) => {
       throw new Errors.BadRequest("missing field favorite");
     }
 
-    const data = await contactRepository.updateStatusContact(
-      contactId,
-      req.body
-    );
+    const data = await contactRepository.updateContact(contactId, req.body);
     if (!data) {
       throw new Errors.NotFound(`Contact ${contactId} not found`);
     }
