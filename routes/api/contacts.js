@@ -12,7 +12,7 @@ const {
 const validateBody = require("../../middlewares/validation");
 const {
   schemaCreateContact,
-  schemaupdateStatus,
+  schemaUpdateStatus,
 } = require("./contactValidationSchema");
 
 const router = express.Router();
@@ -29,7 +29,7 @@ router.put("/:contactId", validateBody(schemaCreateContact), updateContact);
 
 router.patch(
   "/:contactId/favorite",
-  validateBody(schemaupdateStatus),
+  validateBody(schemaUpdateStatus),
   updateStatusContact
 );
 

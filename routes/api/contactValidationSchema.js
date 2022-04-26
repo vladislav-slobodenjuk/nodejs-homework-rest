@@ -13,8 +13,8 @@ const schemaCreateContact = Joi.object({
     .required(),
 });
 
-const schemaupdateStatus = Joi.object({
+const schemaUpdateStatus = Joi.object({
   favorite: Joi.boolean().optional(),
 });
 
-module.exports = { schemaCreateContact, schemaupdateStatus };
+module.exports = { schemaCreateContact, schemaUpdateStatus };
