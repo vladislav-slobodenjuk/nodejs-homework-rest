@@ -1,5 +1,4 @@
 const Errors = require("http-errors");
-
 const contactRepository = require("../../repository/contacts");
 
 const listContacts = async (req, res, next) => {
