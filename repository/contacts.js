@@ -1,15 +1,18 @@
 const Contact = require("../models/contact");
 
-const listContacts = async () => {
-  return await Contact.find();
+const listContacts = async (_id) => {
+  return await Contact.find({ owner: _id }).populate(
+    "owner",
+    "_id email subscription"
+  );
 };
 
 const getContactById = async (contactId) => {
   return await Contact.findById(contactId);
 };
 
-const addContact = async (body) => {
-  return await Contact.create(body);
+const addContact = async (_id, body) => {
+  return await Contact.create({ ...body, owner: _id });
 };
 
 const removeContact = async (contactId) => {

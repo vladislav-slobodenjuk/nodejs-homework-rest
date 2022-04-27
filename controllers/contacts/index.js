@@ -2,8 +2,10 @@ const Errors = require("http-errors");
 const contactRepository = require("../../repository/contacts");
 
 const listContacts = async (req, res, next) => {
+  const { _id } = req.user;
+
   try {
-    const data = await contactRepository.listContacts();
+    const data = await contactRepository.listContacts(_id);
     res.json({ status: "success", code: 200, data });
   } catch (error) {
     next(error);
@@ -25,10 +27,10 @@ const getContactById = async (req, res, next) => {
 };
 
 const addContact = async (req, res, next) => {
-  console.log("body:", req.body);
+  const { _id } = req.user;
 
   try {
-    const newContact = await contactRepository.addContact(req.body);
+    const newContact = await contactRepository.addContact(_id, req.body);
     res.status(201).json({ status: "success", code: 201, data: newContact });
   } catch (error) {
     next(error);

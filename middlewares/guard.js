@@ -10,7 +10,7 @@ const guard = async (req, res, next) => {
   try {
     const payload = jwt.verify(token, JWT_SECRET_KEY); // если проверка провалится вылетит ошибкаб иначе вернет payload
     const user = await User.findById(payload._id);
-    if (!user) throw new Error();
+    if (!user || token !== user.token) throw new Error();
     req.user = user;
     next();
   } catch (error) {
