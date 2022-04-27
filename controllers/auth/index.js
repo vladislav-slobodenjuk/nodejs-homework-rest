@@ -37,6 +37,7 @@ const login = async (req, res) => {
   }
   const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
   const token = jwt.sign({ _id }, JWT_SECRET_KEY, { expiresIn: "1d" });
+  await User.findByIdAndUpdate(_id, { token }, { new: true }); // добавляем токен в базу
 
   res.json({
     status: "success",
