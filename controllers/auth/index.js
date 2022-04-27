@@ -1,7 +1,6 @@
 const Errors = require("http-errors");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const SECRET_KEY = process.env.SECRET_KEY;
 // const contactRepository = require("../../repository/contacts");
 
 const { User } = require("../../models/user");
@@ -30,23 +29,20 @@ const login = async (req, res) => {
   if (!userAtDb) {
     throw new Errors.Unauthorized("Email or password is wrong");
   }
-  const passCompare = await bcrypt.compare(password, userAtDb.password);
+  const { _id, password: DbPassword, subscription } = userAtDb;
+  const passCompare = await bcrypt.compare(password, DbPassword);
 
   if (!passCompare) {
     throw new Errors.Unauthorized("Email or password is wrong");
   }
-  console.log(SECRET_KEY);
-  // console.log(userAtDb._id);
-  const token = jwt.sign(userAtDb._id, SECRET_KEY, { expiresIn: "1d" });
-  console.log(token);
-  res.status({
+  const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
+  const token = jwt.sign({ _id }, JWT_SECRET_KEY, { expiresIn: "1d" });
+
+  res.json({
     status: "success",
     code: 200,
     token,
-    user: {
-      email,
-      subscription: userAtDb.subscription,
-    },
+    user: { email, subscription },
   });
 };
 
