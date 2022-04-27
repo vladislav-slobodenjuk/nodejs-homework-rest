@@ -9,7 +9,7 @@ const {
   updateStatusContact,
 } = require("../../../controllers/contacts");
 
-const validateBody = require("../../middlewares/validation");
+const validateBody = require("../../../middlewares/validation");
 const {
   schemaCreateContact,
   schemaUpdateStatus,
