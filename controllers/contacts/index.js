@@ -1,92 +1,64 @@
 const Errors = require("http-errors");
 const contactRepository = require("../../repository/contacts");
 
-const listContacts = async (req, res, next) => {
+const listContacts = async (req, res) => {
   const { _id } = req.user;
 
-  try {
-    const data = await contactRepository.listContacts(_id);
-    res.json({ status: "success", code: 200, data });
-  } catch (error) {
-    next(error);
-  }
+  const data = await contactRepository.listContacts(_id);
+  res.json({ status: "success", code: 200, data });
 };
 
-const getContactById = async (req, res, next) => {
+const getContactById = async (req, res) => {
   const contactId = req.params.contactId;
 
-  try {
-    const data = await contactRepository.getContactById(contactId);
-    if (!data) {
-      throw new Errors.NotFound(`Contact ${contactId} not found`);
-    }
-    res.json({ status: "success", code: 200, data });
-  } catch (error) {
-    next(error);
+  const data = await contactRepository.getContactById(contactId);
+  if (!data) {
+    throw new Errors.NotFound(`Contact ${contactId} not found`);
   }
+  res.json({ status: "success", code: 200, data });
 };
 
-const addContact = async (req, res, next) => {
+const addContact = async (req, res) => {
   const { _id } = req.user;
-
-  try {
-    const newContact = await contactRepository.addContact(_id, req.body);
-    res.status(201).json({ status: "success", code: 201, data: newContact });
-  } catch (error) {
-    next(error);
-  }
+  const newContact = await contactRepository.addContact(_id, req.body);
+  res.status(201).json({ status: "success", code: 201, data: newContact });
 };
 
-const removeContact = async (req, res, next) => {
+const removeContact = async (req, res) => {
   const contactId = req.params.contactId;
-
-  try {
-    const data = await contactRepository.removeContact(contactId);
-    if (!data) {
-      throw new Errors.NotFound(`Contact ${contactId} not found`);
-    }
-
-    res.json({
-      status: "success",
-      code: 200,
-      message: "contact deleted",
-      data,
-    });
-  } catch (error) {
-    next(error);
+  const data = await contactRepository.removeContact(contactId);
+  if (!data) {
+    throw new Errors.NotFound(`Contact ${contactId} not found`);
   }
+  res.json({
+    status: "success",
+    code: 200,
+    message: "contact deleted",
+    data,
+  });
 };
 
-const updateContact = async (req, res, next) => {
+const updateContact = async (req, res) => {
   const contactId = req.params.contactId;
-
-  try {
-    const data = await contactRepository.updateContact(contactId, req.body);
-    if (!data) {
-      throw new Errors.NotFound(`Contact ${contactId} not found`);
-    }
-    res.status(200).json({ status: "success", code: 200, data });
-  } catch (error) {
-    next(error);
+  const data = await contactRepository.updateContact(contactId, req.body);
+  if (!data) {
+    throw new Errors.NotFound(`Contact ${contactId} not found`);
   }
+  res.status(200).json({ status: "success", code: 200, data });
 };
 
-const updateStatusContact = async (req, res, next) => {
+const updateStatusContact = async (req, res) => {
   const contactId = req.params.contactId;
 
-  try {
-    if (Object.getOwnPropertyNames(req.body).length === 0) {
-      throw new Errors.BadRequest("missing field favorite");
-    }
-
-    const data = await contactRepository.updateContact(contactId, req.body);
-    if (!data) {
-      throw new Errors.NotFound(`Contact ${contactId} not found`);
-    }
-    res.status(200).json({ status: "success", code: 200, data });
-  } catch (error) {
-    next(error);
+  if (Object.getOwnPropertyNames(req.body).length === 0) {
+    throw new Errors.BadRequest("missing field favorite");
   }
+
+  const data = await contactRepository.updateContact(contactId, req.body);
+  if (!data) {
+    throw new Errors.NotFound(`Contact ${contactId} not found`);
+  }
+  res.status(200).json({ status: "success", code: 200, data });
 };
 
 module.exports = {

@@ -8,9 +8,10 @@ const guard = async (req, res, next) => {
   const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
   try {
-    const payload = jwt.verify(token, JWT_SECRET_KEY); // если проверка провалится вылетит ошибкаб иначе вернет payload
+    const payload = jwt.verify(token, JWT_SECRET_KEY); // если проверка провалится вылетит ошибка, иначе вернет payload
     const user = await User.findById(payload._id);
-    if (!user || token !== user.token) throw new Error();
+    if (!user || token !== user.token)
+      throw new Errors.Unauthorized("Not authorized");
     req.user = user;
     next();
   } catch (error) {

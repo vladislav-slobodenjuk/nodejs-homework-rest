@@ -35,7 +35,6 @@ const schemaRegUser = Joi.object({
     .required(),
   subscription: Joi.string().valid("starter", "pro", "business").optional(),
   token: Joi.string().token(),
-  // token: Joi.string().token().optional(),
 });
 
 const schemaLoginUser = Joi.object({
