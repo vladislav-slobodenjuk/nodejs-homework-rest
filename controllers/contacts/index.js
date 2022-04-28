@@ -3,14 +3,14 @@ const contactRepository = require("../../repository/contacts");
 
 const listContacts = async (req, res) => {
   const { _id } = req.user;
-
-  const data = await contactRepository.listContacts(_id);
-  res.json({ status: "success", code: 200, data });
+  const { page = 1, limit = 5 } = req.query;
+  const skip = (page - 1) * limit;
+  const data = await contactRepository.listContacts(_id, skip, limit);
+  res.json({ status: "success", code: 200, page, data });
 };
 
 const getContactById = async (req, res) => {
   const contactId = req.params.contactId;
-
   const data = await contactRepository.getContactById(contactId);
   if (!data) {
     throw new Errors.NotFound(`Contact ${contactId} not found`);
@@ -49,11 +49,9 @@ const updateContact = async (req, res) => {
 
 const updateStatusContact = async (req, res) => {
   const contactId = req.params.contactId;
-
   if (Object.getOwnPropertyNames(req.body).length === 0) {
     throw new Errors.BadRequest("missing field favorite");
   }
-
   const data = await contactRepository.updateContact(contactId, req.body);
   if (!data) {
     throw new Errors.NotFound(`Contact ${contactId} not found`);
