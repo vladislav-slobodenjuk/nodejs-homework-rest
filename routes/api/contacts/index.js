@@ -15,7 +15,7 @@ const errorWrapper = require("../../../middlewares/errorWrapper");
 const {
   schemaCreateContact,
   schemaUpdateStatus,
-} = require("./contactValidationSchema");
+} = require("../../../models/contact");
 
 const router = express.Router();
 

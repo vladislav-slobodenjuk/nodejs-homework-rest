@@ -1,4 +1,5 @@
 const { Schema, model } = require("mongoose");
+const Joi = require("joi");
 
 const contactSchema = Schema(
   {
@@ -17,4 +18,21 @@ const contactSchema = Schema(
 
 const Contact = model("contact", contactSchema);
 
-module.exports = Contact;
+const schemaCreateContact = Joi.object({
+  name: Joi.string().min(2).max(20).required(),
+  email: Joi.string()
+    .email({
+      minDomainSegments: 2,
+      tlds: { allow: true },
+    })
+    .required(),
+  phone: Joi.string()
+    .pattern(/[0-9]+/)
+    .required(),
+});
+
+const schemaUpdateStatus = Joi.object({
+  favorite: Joi.boolean().optional(),
+});
+
+module.exports = { Contact, schemaCreateContact, schemaUpdateStatus };

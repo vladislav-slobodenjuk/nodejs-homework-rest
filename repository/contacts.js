@@ -1,4 +1,4 @@
-const Contact = require("../models/contact");
+const { Contact } = require("../models/contact");
 
 const listContacts = async (userId, skip, limit) => {
   return await Contact.find({ owner: userId }, "", {
