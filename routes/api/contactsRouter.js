@@ -7,15 +7,15 @@ const {
   removeContact,
   updateContact,
   updateStatusContact,
-} = require("../../../controllers/contacts");
+} = require("../../controllers/contactsController");
 
-const guard = require("../../../middlewares/guard");
-const validateBody = require("../../../middlewares/validation");
-const errorWrapper = require("../../../middlewares/errorWrapper");
+const guard = require("../../middlewares/guard");
+const validateBody = require("../../middlewares/validation");
+const errorWrapper = require("../../middlewares/errorWrapper");
 const {
   schemaCreateContact,
   schemaUpdateStatus,
-} = require("../../../models/contact");
+} = require("../../models/contact");
 
 const router = express.Router();
 

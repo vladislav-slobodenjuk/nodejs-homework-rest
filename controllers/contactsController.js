@@ -1,5 +1,5 @@
 const Errors = require("http-errors");
-const contactRepository = require("../../repository/contacts");
+const contactRepository = require("../repository/contacts");
 
 const listContacts = async (req, res) => {
   const { _id } = req.user;
