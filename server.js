@@ -1,6 +1,8 @@
-const app = require("./app");
-const db = require("./config/db");
+require("dotenv").config();
+
 const { mkdir } = require("fs/promises");
+const db = require("./config/db");
+const app = require("./app");
 
 db.then(() => {
   app.listen(3000, async () => {

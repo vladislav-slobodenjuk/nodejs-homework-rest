@@ -9,7 +9,6 @@ const getCurrent = async (req, res) => {
 };
 
 const avatar = async (req, res) => {
-  //
   const { id } = req.user;
   const pathFile = req.file.path;
   const filename = req.file.filename;
@@ -22,14 +21,11 @@ const avatar = async (req, res) => {
     .writeAsync(pathFile);
 
   const destination = path.join(staticFolder, "avatars", id);
-  console.log(destination);
   await fs.mkdir(destination, { recursive: true });
   await fs.rename(pathFile, path.join(destination, filename));
-  const avatarURL = path.normalize(path.join(id, filename));
-  console.log("avatarURL :>> ", avatarURL);
+  const avatarURL = path.normalize(path.join("avatars", id, filename));
   await User.findByIdAndUpdate(id, { avatarURL });
 
-  //
   res.json({ status: "success", code: 200, avatar: avatarURL });
 };
 
