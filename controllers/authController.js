@@ -11,13 +11,15 @@ const register = async (req, res) => {
   if (userAtDb) {
     throw new Errors.Conflict(`Email ${email} is in use`);
   }
-
   const hashPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
-  const { subscription } = await User.create({ email, password: hashPassword });
+  const { subscription, avatarURL } = await User.create({
+    email,
+    password: hashPassword,
+  });
   res.status(201).json({
     status: "success",
     code: 201,
-    user: { email, subscription },
+    user: { email, subscription, avatarURL },
   });
 };
 
@@ -28,7 +30,7 @@ const login = async (req, res) => {
   if (!userAtDb) {
     throw new Errors.Unauthorized("Email or password is wrong");
   }
-  const { _id, password: DbPassword, subscription } = userAtDb;
+  const { _id, password: DbPassword, subscription, avatarURL } = userAtDb;
   const passCompare = await bcrypt.compare(password, DbPassword);
 
   if (!passCompare) {
@@ -42,7 +44,7 @@ const login = async (req, res) => {
     status: "success",
     code: 200,
     token,
-    user: { email, subscription },
+    user: { email, subscription, avatarURL },
   });
 };
 
