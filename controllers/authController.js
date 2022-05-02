@@ -1,8 +1,14 @@
 const Errors = require("http-errors");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { randomUUID } = require("crypto");
 
 const { User } = require("../models/user");
+const {
+  createEmailTemplate,
+  sendEmailByNodemailer,
+  // sendEmailBySendGrid,
+} = require("../services/email");
 
 const register = async (req, res) => {
   const { email, password } = req.body;
@@ -11,15 +17,26 @@ const register = async (req, res) => {
   if (userAtDb) {
     throw new Errors.Conflict(`Email ${email} is in use`);
   }
-  const hashPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
-  const { subscription, avatarURL } = await User.create({
-    email,
-    password: hashPassword,
-  });
+
+  const verificationToken = randomUUID();
+  const template = createEmailTemplate(email, verificationToken);
+  try {
+    await sendEmailByNodemailer(email, template);
+  } catch (error) {
+    console.error(error);
+    throw new Error("email wasn't sent");
+  }
+
+  // const hashPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
+  // const { subscription, avatarURL } = await User.create({
+  //   email,
+  //   password: hashPassword,
+  //   verificationToken,
+  // });
   res.status(201).json({
     status: "success",
     code: 201,
-    user: { email, subscription, avatarURL },
+    // user: { email, subscription, avatarURL },
   });
 };
 
@@ -54,4 +71,32 @@ const logout = async (req, res) => {
   res.status(204).json();
 };
 
-module.exports = { register, login, logout };
+const verifyUser = async (req, res) => {
+  const { verificationToken } = req.params;
+  const userAtDb = await User.findOne({ verificationToken });
+
+  if (!userAtDb) throw new Errors.NotFound("User not found");
+
+  if (userAtDb.isVerified) {
+    throw new Errors.BadRequest("Verification has already been passed");
+  }
+  await User.findByIdAndUpdate(userAtDb._id, { isVerified: true });
+
+  res.status(200).json({
+    status: "success",
+    code: 200,
+    message: "Verification successful",
+  });
+};
+
+const reVerifyUser = async (req, res) => {
+  // const { email } = req.params;
+  //
+  // res.status(200).json({
+  //   status: "success",
+  //   code: 200,
+  //   message: "Verification email sent",
+  // });
+};
+
+module.exports = { register, login, logout, verifyUser, reVerifyUser };

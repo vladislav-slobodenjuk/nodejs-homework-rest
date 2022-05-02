@@ -19,12 +19,23 @@ const userSchema = Schema(
       enum: ["starter", "pro", "business"],
       default: "starter",
     },
-    token: { type: String, default: null },
+    token: {
+      type: String,
+      default: null,
+    },
     avatarURL: {
       type: String,
       default: function () {
         return gravatar.url(this.email, { s: 250 }, true);
       },
+    },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+    verificationToken: {
+      type: String,
+      required: [true, "verification token is required"],
     },
   },
   { versionKey: false, timestamps: true }
