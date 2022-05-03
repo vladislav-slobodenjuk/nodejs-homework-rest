@@ -1,7 +1,8 @@
 const Mailgen = require("mailgen");
 
-// const sgMail = require("@sendgrid/mail");
-// sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+const sgMail = require("@sendgrid/mail");
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
 const nodemailer = require("nodemailer");
 
 const host = "http://localhost:3000";
@@ -24,7 +25,7 @@ const createEmailTemplate = (username, verificationToken) => {
         button: {
           color: "#22BC66", // Optional action button color
           text: "Confirm your account",
-          link: `http://localhost:3000/api/auth/verify/${verificationToken}`,
+          link: `${host}/api/auth/verify/${verificationToken}`,
         },
       },
       outro:
@@ -40,10 +41,10 @@ const sendEmailBySendGrid = async (email, template) => {
     to: email,
     from: process.env.SENDGRID_FROM,
     subject: "Have a look at Node email homework",
-    // text: "Привет. Мы тестируем отправку писем!",
+    text: "Привет. Мы тестируем отправку писем!",
     html: template,
   };
-  // return await sgMail.send(emailOptions);
+  return await sgMail.send(emailOptions);
 };
 
 const sendEmailByNodemailer = async (email, template) => {
@@ -52,28 +53,20 @@ const sendEmailByNodemailer = async (email, template) => {
     port: 465,
     secure: true,
     auth: {
-      user: "vladjun@meta.ua",
-      pass: "7751391Vladjun",
+      user: process.env.USER_NODEMAILER,
+      pass: process.env.PASSWORD_NODEMAILER,
     },
   };
 
   const transporter = nodemailer.createTransport(config);
   const emailOptions = {
-    from: "vladjun@meta.ua",
-    to: "vladjun@gmail.com",
+    from: process.env.USER_NODEMAILER,
+    to: email,
     subject: "Nodemailer test",
-    text: `, Отправитель: `,
+    text: template,
   };
-
   return await transporter.sendMail(emailOptions);
-
-  transporter
-    .sendMail(emailOptions)
-    .then((info) => res.render("done"))
-    .catch((err) => console.error(err));
 };
-
-// sendEmailByNodemailer();
 
 module.exports = {
   createEmailTemplate,

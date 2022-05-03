@@ -65,4 +65,13 @@ const schemaLoginUser = Joi.object({
     .required(),
 });
 
-module.exports = { User, schemaRegUser, schemaLoginUser };
+const schemaVerify = Joi.object({
+  email: Joi.string()
+    .email({
+      minDomainSegments: 2,
+      tlds: { allow: true },
+    })
+    .required(),
+});
+
+module.exports = { User, schemaRegUser, schemaLoginUser, schemaVerify };
