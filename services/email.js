@@ -5,7 +5,7 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const nodemailer = require("nodemailer");
 
-const host = "http://localhost:3000";
+const host = "https://node-mail-taraining.herokuapp.com";
 
 const createEmailTemplate = (username, verificationToken) => {
   const mailGenerator = new Mailgen({
