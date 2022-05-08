@@ -7,20 +7,24 @@ const listContacts = async (userId, skip, limit) => {
   }).populate("owner", "_id email subscription");
 };
 
-const getContactById = async (contactId) => {
-  return await Contact.findById(contactId);
+const getContactById = async (contactId, userId) => {
+  return await Contact.findOne({ _id: contactId, owner: userId });
 };
 
 const addContact = async (userId, body) => {
   return await Contact.create({ ...body, owner: userId });
 };
 
-const removeContact = async (contactId) => {
-  return await Contact.findByIdAndRemove(contactId);
+const removeContact = async (contactId, userId) => {
+  return await Contact.findOneAndRemove({ _id: contactId, owner: userId });
 };
 
-const updateContact = async (contactId, body) => {
-  return await Contact.findByIdAndUpdate(contactId, { ...body }, { new: true });
+const updateContact = async (contactId, userId, body) => {
+  return await Contact.findOneAndUpdate(
+    { _id: contactId, owner: userId },
+    { ...body },
+    { new: true }
+  );
 };
 
 module.exports = {

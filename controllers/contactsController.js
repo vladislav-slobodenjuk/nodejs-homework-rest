@@ -11,7 +11,8 @@ const listContacts = async (req, res) => {
 
 const getContactById = async (req, res) => {
   const contactId = req.params.contactId;
-  const data = await contactRepository.getContactById(contactId);
+  const { _id: userId } = req.user; // деструктуризация с переименованием
+  const data = await contactRepository.getContactById(contactId, userId);
   if (!data) {
     throw new Errors.NotFound(`Contact ${contactId} not found`);
   }
@@ -26,7 +27,8 @@ const addContact = async (req, res) => {
 
 const removeContact = async (req, res) => {
   const contactId = req.params.contactId;
-  const data = await contactRepository.removeContact(contactId);
+  const { _id: userId } = req.user; // деструктуризация с переименованием
+  const data = await contactRepository.removeContact(contactId, userId);
   if (!data) {
     throw new Errors.NotFound(`Contact ${contactId} not found`);
   }
@@ -40,7 +42,12 @@ const removeContact = async (req, res) => {
 
 const updateContact = async (req, res) => {
   const contactId = req.params.contactId;
-  const data = await contactRepository.updateContact(contactId, req.body);
+  const { _id: userId } = req.user; // деструктуризация с переименованием
+  const data = await contactRepository.updateContact(
+    contactId,
+    userId,
+    req.body
+  );
   if (!data) {
     throw new Errors.NotFound(`Contact ${contactId} not found`);
   }
@@ -49,10 +56,16 @@ const updateContact = async (req, res) => {
 
 const updateStatusContact = async (req, res) => {
   const contactId = req.params.contactId;
+  const { _id: userId } = req.user; // деструктуризация с переименованием
+
   if (Object.getOwnPropertyNames(req.body).length === 0) {
     throw new Errors.BadRequest("missing field favorite");
   }
-  const data = await contactRepository.updateContact(contactId, req.body);
+  const data = await contactRepository.updateContact(
+    contactId,
+    userId,
+    req.body
+  );
   if (!data) {
     throw new Errors.NotFound(`Contact ${contactId} not found`);
   }
