@@ -4,8 +4,12 @@ const fs = require("fs/promises");
 const { User } = require("../models/user");
 
 const getCurrent = async (req, res) => {
-  const { email, subscription } = req.user;
-  res.json({ status: "success", code: 200, data: { email, subscription } });
+  const { email, subscription, avatarURL } = req.user;
+  res.json({
+    status: "success",
+    code: 200,
+    data: { email, subscription, avatarURL },
+  });
 };
 
 const avatar = async (req, res) => {

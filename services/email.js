@@ -63,7 +63,7 @@ const sendEmailByNodemailer = async (email, template) => {
     from: process.env.USER_NODEMAILER,
     to: email,
     subject: "Nodemailer test",
-    text: template,
+    html: template,
   };
   return await transporter.sendMail(emailOptions);
 };
